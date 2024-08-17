@@ -60,6 +60,7 @@ async function run() {
       // Filtering logic
       if (search) query.productName = { $regex: search, $options: 'i' };
       if (category) query.category = category;
+      if (brand) query.brand = brand;
 
       try {
         const productsCount = await ProductCollection.countDocuments(query);
