@@ -59,7 +59,16 @@ async function run() {
 
       // Filtering logic
       if (search) query.productName = { $regex: search, $options: 'i' };
-     
+      if (category) query.category = category;
+
+      try {
+        const productsCount = await ProductCollection.countDocuments(query);
+        const products = await ProductCollection.find(query)
+          .sort(sortOption)
+          .skip((page - 1) * limit) // Skip the documents for previous pages
+          .limit(parseInt(limit)) // Limit the number of documents returned
+          .toArray();
+
         res.json({
           products,
           totalPages: Math.ceil(productsCount / limit),
