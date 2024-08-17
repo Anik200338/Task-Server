@@ -36,6 +36,12 @@ async function run() {
     ProductCollection.createIndex({ productName: 1, category: 1, email: 1 })
       .then(() => console.log('Index created on name field'))
       .catch(err => console.error('Failed to create index:', err));
+
+    app.post('/AddProduct', async (req, res) => {
+      const item = req.body;
+      const result = await ProductCollection.insertOne(item);
+      res.send(result);
+    });
   } finally {
     // Ensure the client will close when you finish/error
     await client.close();
