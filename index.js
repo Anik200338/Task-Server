@@ -31,6 +31,11 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
+    const ProductCollection = client.db('ProductDb').collection('Products');
+
+    ProductCollection.createIndex({ productName: 1, category: 1, email: 1 })
+      .then(() => console.log('Index created on name field'))
+      .catch(err => console.error('Failed to create index:', err));
   } finally {
     // Ensure the client will close when you finish/error
     await client.close();
