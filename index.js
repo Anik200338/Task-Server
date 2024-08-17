@@ -61,6 +61,15 @@ async function run() {
       if (search) query.productName = { $regex: search, $options: 'i' };
       if (category) query.category = category;
       if (brand) query.brand = brand;
+      if (minPrice)
+        query.price = { ...query.price, $gte: parseFloat(minPrice) };
+      if (maxPrice)
+        query.price = { ...query.price, $lte: parseFloat(maxPrice) };
+
+      let sortOption = {};
+      if (sort === 'priceAsc') sortOption.price = 1;
+      else if (sort === 'priceDesc') sortOption.price = -1;
+      else if (sort === 'dateDesc') sortOption.postTime = -1;
 
       try {
         const productsCount = await ProductCollection.countDocuments(query);
