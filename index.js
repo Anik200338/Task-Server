@@ -42,6 +42,33 @@ async function run() {
       const result = await ProductCollection.insertOne(item);
       res.send(result);
     });
+
+    app.get('/products', async (req, res) => {
+      const {
+        search,
+        category,
+        minPrice,
+        maxPrice,
+        brand,
+        sort,
+        page = 1,
+        limit = 10,
+      } = req.query;
+
+      const query = {};
+
+      // Filtering logic
+      if (search) query.productName = { $regex: search, $options: 'i' };
+     
+        res.json({
+          products,
+          totalPages: Math.ceil(productsCount / limit),
+          currentPage: parseInt(page),
+        });
+      } catch (error) {
+        res.status(500).send('Error fetching products');
+      }
+    });
   } finally {
     // Ensure the client will close when you finish/error
     await client.close();
